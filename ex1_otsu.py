@@ -10,7 +10,7 @@ PART B (write code): fill in otsu_threshold() below, then run  python check.py e
 
 PART C (light knob experiment)
   For each light setting 100 %, 50 %, 20 %, 0 %:
-    - turn the knob on FrED, set the "light %" slider to the same number (it labels your snapshot)
+    - you can adjust the light intensity using the switch on the USB cable, set the "light %" slider in the GUI to the same number (it labels your snapshot)
     - wait 2 s, press  s  to save a snapshot
   Then compare them:   python compare.py --latest 4
   Questions:
