@@ -87,11 +87,15 @@ def get_edges(frame_rgb: np.ndarray, cam: FiberCamera | None = None):
 
 
 def hough(edges: np.ndarray, votes=HOUGH_VOTES, min_length=HOUGH_MIN_LENGTH, max_gap=HOUGH_MAX_GAP):
-    return cv2.HoughLinesP(edges, HOUGH_RHO, HOUGH_THETA, votes,
-                           minLineLength=min_length, maxLineGap=max_gap)
+    lines = cv2.HoughLinesP(edges, HOUGH_RHO, HOUGH_THETA, votes,
+                            minLineLength=min_length, maxLineGap=max_gap)
+    # FrED's code reads each line as line[0]; some OpenCV builds return (N, 4) instead of (N, 1, 4)
+    return None if lines is None else lines.reshape(-1, 1, 4)
 
 
 def diameter_px(lines) -> float:
+    if lines is not None:
+        lines = np.asarray(lines).reshape(-1, 1, 4)
     return float(_default.get_fiber_diameter_in_pixels(lines))
 
 
