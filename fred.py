@@ -1,4 +1,4 @@
-"""The real FrED measurement code (../fiber_camera.py), usable without PyQt5 or a database.
+"""The real FrED measurement code (fiber_camera.py), usable without PyQt5 or a database.
 
 fiber_camera.py is not modified. Its imports of PyQt5 and `database` are replaced by
 small stand-ins (the same trick as run_usb_camera.py), so we can call its real methods:
@@ -17,7 +17,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent
 
 
 def _install_stubs() -> None:
