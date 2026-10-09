@@ -16,7 +16,7 @@ Keys in every lab window:
     b      remember the focused panel as BEFORE
     d      show BEFORE | NOW | difference for the focused panel
     z      zoom into the wire's left edge
-    s      save a snapshot to lab/snapshots/ (use compare.py to view them)
+    s      save a snapshot to snapshots/ (use compare.py to view them)
     q      quit
 """
 from __future__ import annotations
@@ -128,7 +128,10 @@ class Source:
         self.image = None
         self.synthetic = args.synthetic
         if args.image:
-            self.image = cv2.imread(str(args.image))
+            image_path = Path(args.image)
+            if not image_path.exists() and (LAB_DIR / image_path).exists():
+                image_path = LAB_DIR / image_path
+            self.image = cv2.imread(str(image_path))
             if self.image is None:
                 raise SystemExit(f"Could not read image {args.image}")
         elif not self.synthetic:
@@ -234,6 +237,7 @@ def patch_view(gray: np.ndarray, x0: int, y0: int, rows: int = 7, cols: int = 11
 def draw_lines(bgr: np.ndarray, lines, color=(0, 0, 255), thickness: int = 2) -> np.ndarray:
     out = to_bgr(bgr).copy()
     if lines is not None:
+        lines = np.asarray(lines).reshape(-1, 1, 4)
         for x0, y0, x1, y1 in lines[:, 0]:
             cv2.line(out, (int(x0), int(y0)), (int(x1), int(y1)), color, thickness)
     return out
@@ -509,7 +513,10 @@ def use_answers(namespace: dict) -> None:
     folder = os.environ.get("LAB_ANSWERS")
     if not folder:
         return
-    path = Path(folder).resolve() / Path(namespace["__file__"]).name
+    folder_path = Path(folder)
+    if not folder_path.is_absolute() and not folder_path.exists() and (LAB_DIR / folder_path).exists():
+        folder_path = LAB_DIR / folder_path
+    path = folder_path.resolve() / Path(namespace["__file__"]).name
     if not path.exists():
         return
     spec = importlib.util.spec_from_file_location(f"answers_{path.stem}", path)

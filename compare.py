@@ -11,7 +11,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import cv2
 import numpy as np
@@ -21,7 +26,15 @@ import labkit
 
 def snapshot_files(paths, latest):
     if paths:
-        return [Path(p) for p in paths]
+        result = []
+        for p in paths:
+            path = Path(p)
+            if not path.exists() and (labkit.SNAPSHOT_DIR / p).exists():
+                path = labkit.SNAPSHOT_DIR / p
+            result.append(path)
+        return result
+    if not labkit.SNAPSHOT_DIR.exists():
+        return []
     files = sorted((p for p in labkit.SNAPSHOT_DIR.glob("*.png")
                     if "__" not in p.name and p.with_suffix(".json").exists()),
                    key=lambda p: p.stat().st_mtime)

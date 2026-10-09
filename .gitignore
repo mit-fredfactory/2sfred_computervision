@@ -1,4 +1,9 @@
 /solutions/
 /__pycache__/
 /frames/
+/snapshots/
+.venv/
+venv/
+*.pyc
+.DS_Store
 

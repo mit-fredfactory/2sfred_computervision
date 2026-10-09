@@ -4,11 +4,32 @@ import sys
 import cv2
 import numpy as np
 from typing import Tuple
-from PyQt5.QtWidgets import QWidget, QLabel, QDoubleSpinBox
-from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtCore import pyqtSignal
+try:
+    from PyQt5.QtWidgets import QWidget, QLabel, QDoubleSpinBox
+    from PyQt5.QtGui import QImage, QPixmap
+    from PyQt5.QtCore import pyqtSignal
+except ImportError:
+    QWidget = QLabel = QDoubleSpinBox = object
+    QImage = QPixmap = object
+    pyqtSignal = lambda *a, **k: None
 
-from database import Database
+try:
+    from database import Database
+except ImportError:
+    class Database:
+        camera_timestamps = []
+        diameter_readings = []
+        diameter_setpoint = []
+        diameter_delta_time = []
+
+        @staticmethod
+        def get_calibration_data(key):
+            return 1.0
+
+        @staticmethod
+        def update_calibration_data(key, value):
+            pass
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -98,6 +119,7 @@ class FiberCamera(QWidget):
         rightmost_max = 0
         if lines is None or len(lines) <= 1:
             return 0
+        lines = np.asarray(lines).reshape(-1, 1, 4)
         for line in lines:
             x0, _, x1, _ = line[0]
             leftmost_min = min(leftmost_min, x0, x1)
@@ -114,6 +136,7 @@ class FiberCamera(QWidget):
         rightmost_max = 0
         if lines is None or len(lines) <= 1:
             return 0
+        lines = np.asarray(lines).reshape(-1, 1, 4)
         for line in lines:
             x0, _, x1, _ = line[0]
             leftmost_min = min(leftmost_min, x0, x1)
@@ -125,6 +148,7 @@ class FiberCamera(QWidget):
     def plot_lines(self, frame, lines):
         """Plot the detected lines on the frame"""
         if lines is not None:
+            lines = np.asarray(lines).reshape(-1, 1, 4)
             for line in lines:
                 x0, y0, x1, y1 = line[0]
                 cv2.line(frame, (x0, y0), (x1, y1), (255, 0, 0), 2)

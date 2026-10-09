@@ -87,8 +87,11 @@ def get_edges(frame_rgb: np.ndarray, cam: FiberCamera | None = None):
 
 
 def hough(edges: np.ndarray, votes=HOUGH_VOTES, min_length=HOUGH_MIN_LENGTH, max_gap=HOUGH_MAX_GAP):
-    return cv2.HoughLinesP(edges, HOUGH_RHO, HOUGH_THETA, votes,
-                           minLineLength=min_length, maxLineGap=max_gap)
+    lines = cv2.HoughLinesP(edges, HOUGH_RHO, HOUGH_THETA, votes,
+                            minLineLength=min_length, maxLineGap=max_gap)
+    if lines is not None:
+        lines = np.asarray(lines).reshape(-1, 1, 4)
+    return lines
 
 
 def diameter_px(lines) -> float:

@@ -20,7 +20,6 @@ PART C (light knob experiment)
        the histogram into TWO classes. How many classes are really there at 0 %?)
 """
 import cv2
-from matplotlib.pyplot import gray
 import numpy as np
 
 import fred
