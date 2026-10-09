@@ -17,19 +17,20 @@ When an exercise needs a rotated or shifted image, the code does it in software.
 
 ## Setup (10 min before the lab, Windows or macOS)
 
-1. Install Python 3.9 or newer, then:
+1. Install VS Code on your laptop.
+2. Install Python 3.9 or newer, then:
    ```
    pip install opencv-python numpy
    ```
-2. Plug FrED's camera USB cable into your laptop.
-3. Find the camera index. In the `lab` folder, run:
+3. Plug FrED's camera USB cable into your laptop.
+4. Find the camera index. In the `lab` folder, run:
    ```
    python labkit.py --list
    ```
    Open the thumbnails it saves in `lab/snapshots/`. The FrED camera shows a white wire on black.
    Use that number as `--index` in every exercise. It is often **1** on Windows. On a Mac it may be 0, 1 or 2,
    because the built-in camera and an iPhone (Continuity Camera) also take index numbers.
-4. If the camera does not open:
+5. If the camera does not open:
    - **Windows:** close the Camera app, Teams, Zoom, etc.
    - **macOS:** go to System Settings → Privacy & Security → Camera and enable Terminal
      (or VS Code / PyCharm). Then **quit and restart** that app. Also quit Photo Booth / FaceTime.
